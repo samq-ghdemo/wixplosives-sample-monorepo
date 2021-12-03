@@ -35,27 +35,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install --only=prod
-        
-      - name: WhiteSource Unified Agent Scan
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          WS_APIKEY: ${{secrets.APIKEY}}
-          WS_USERKEY: ${{secrets.USERKEY}}
-          WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
-          WS_PRODUCTNAME: GH_${{github.event.repository.name}}
-          WS_PROJECTNAME: ${{github.ref}}_Prioritize
-          WS_ENABLEIMPACTANALYSIS: true
-          WS_REQUIREKNOWNSHA1: false
-          WS_RESOLVEALLDEPENDENCIES: false
-          WS_NPM_RESOLVEDEPENDENCIES: true
-          WS_NPM_RESOLVELOCKFILE: false
-          WS_FILESYSTEMSCAN: false
-          WS_GENERATEPROJECTDETAILSJSON: true
-        run: |
-          curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-          echo Unified Agent downloaded successfully
-          java -jar wss-unified-agent.jar -appPath ./package.json -d ./
-
+      - run: npm ci
+      - run: npm test
+      
       - name: WhiteSource Prioritize Scan
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
